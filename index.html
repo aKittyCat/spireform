@@ -390,6 +390,7 @@
       <form id="charForm" class="space-y-6">
         <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
           <h3 class="text-lg font-semibold mb-4">🧾 ข้อมูลตัวละคร</h3>
+          
           <div class="grid md:grid-cols-2 gap-4">
             <label class="block">
               <span class="text-sm text-gray-300">ชื่อ</span>
@@ -399,7 +400,10 @@
               <span class="text-sm text-gray-300">คลาสหลัก (เริ่มที่เลเวล 3)</span>
               <input type="text" id="primaryClass" required class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Fighter Level 3" />
             </label>
-            <label class="block md:col-span-2">
+          </div>
+
+          <div class="mt-4">
+            <label class="block">
               <span class="text-sm text-gray-300">คลาสรอง (ถ้ามี)</span>
               <input type="text" id="multiclass" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="sub-class ของสายนั้ันๆ (ถ้าไม่มีเว้นว่าง)" />
             </label>
@@ -407,8 +411,8 @@
 
           <div class="grid md:grid-cols-2 gap-4 mt-4">
             <label class="block">
-              <span class="text-sm text-gray-300">เผ่า & ASI Bonus จากเผ่า <span style="color: #cc10cc;">*ตัวอย่าง: Variant Human (STR +1, WIS +1)</span>
-              <textarea id="raceAsi" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="ระบุเผ่าย่อย และถ้าเผ่ามีหลายเวอร์ชั่นให้บอกว่ามาจากเล่มไหน ตัวอย่าง: Variant Human (STR +1, WIS +1)"></textarea>
+              <span class="text-sm text-gray-300">เผ่า & ASI Bonus จากเผ่า <span style="color: #cc10cc;">*ตัวอย่าง: Variant Human (STR +1, WIS +1)</span></span>
+              <textarea id="raceAsi" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="ระบุเผ่าย่อย และถ้าเผ่ามีหลายเวอร์ชั่นให้บอกว่ามาจากเล่มไหน"></textarea>
             </label>
             <label class="block">
               <span class="text-sm text-gray-300">Custom Lineage Trait</span>
@@ -417,7 +421,22 @@
           </div>
 
           <div class="grid md:grid-cols-3 gap-4 mt-4">
-            <label class="block md:col-span-3">
+            <label class="block md:col-span-1">
+              <span class="text-sm text-gray-300">Alignment</span>
+              <select id="alignment" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent text-gray-100">
+                <option value="-">-- เลือก Alignment --</option>
+                <option value="Lawful Good">Lawful Good</option>
+                <option value="Neutral Good">Neutral Good</option>
+                <option value="Chaotic Good">Chaotic Good</option>
+                <option value="Lawful Neutral">Lawful Neutral</option>
+                <option value="True Neutral">True Neutral</option>
+                <option value="Chaotic Neutral">Chaotic Neutral</option>
+                <option value="Lawful Evil">Lawful Evil</option>
+                <option value="Neutral Evil">Neutral Evil</option>
+                <option value="Chaotic Evil">Chaotic Evil</option>
+              </select>
+            </label>
+            <label class="block md:col-span-2">
               <span class="text-sm text-gray-300">Background</span>
               <input type="text" id="background" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Soldier, Sage"/>
             </label>

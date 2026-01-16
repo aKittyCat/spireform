@@ -550,6 +550,12 @@ async function fetchCharacter() {
     document.getElementById("multiclass").value = multiclass;
     document.getElementById("raceAsi").value = raceName;
     document.getElementById("customLineage").value = customLineage.join("\n");
+    const alignmentMap = {
+      1: "Lawful Good", 2: "Neutral Good", 3: "Chaotic Good",
+      4: "Lawful Neutral", 5: "Neutral", 6: "Chaotic Neutral",
+      7: "Lawful Evil", 8: "Neutral Evil", 9: "Chaotic Evil"
+    };
+    document.getElementById("alignment").value = alignmentMap[c.alignmentId] || "-";
     document.getElementById("background").value = background;
     document.getElementById("feat").value = feats;
     document.getElementById("classOptions").value = finalClassOptions.join("\n");
@@ -608,6 +614,7 @@ function composeDiscordText() {
     "",
     `Custom Lineage Trait:\n${val("customLineage") || "-"}`,
     "",
+    `Alignment: ${val("alignment")}`,
     `Background: ${val("background") || "-"}`,
     "",
     `Stat หลัก: (ไม่รวม Bonus) ${num("str")} Str / ${num("dex")} Dex / ${num(
