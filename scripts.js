@@ -169,9 +169,8 @@ async function fetchCharacter() {
     // === Background ===
     const background = safeValue(
       c.background?.hasCustomBackground
-        ? `${c.background.customBackground?.name || ""} (Background Feature: ${
-            c.background.customBackground?.featuresBackground?.featureName || ""
-          } [${c.background.customBackground?.featuresBackground?.name || ""}])`
+        ? `${c.background.customBackground?.name || ""} (Background Feature: ${c.background.customBackground?.featuresBackground?.featureName || ""
+        } [${c.background.customBackground?.featuresBackground?.name || ""}])`
         : c.background?.definition?.name,
       ""
     );
