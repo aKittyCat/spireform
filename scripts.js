@@ -1,5 +1,9 @@
-// ใช้ corsproxy.io
-const PROXY_URL = "https://corsproxy.io/?";
+// CORS Proxy List
+const PROXY_LIST = [
+  { name: 'vercel', url: '/api/proxy?url=' },
+  { name: 'corsproxy', url: 'https://corsproxy.io/?' },
+  { name: 'allorigins', url: 'https://api.allorigins.win/raw?url=' },
+];
 
 // ตารางแต้ม 35 Point Buy
 const pointCosts = {
@@ -63,6 +67,29 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("resetStats").addEventListener("click", resetStats);
 });
 
+// ฟังก์ชัน fetch ผ่าน proxy แบบ fallback
+async function fetchWithProxy(apiUrl) {
+  let lastError;
+
+  for (const proxy of PROXY_LIST) {
+    try {
+      const proxyUrl = `${proxy.url}${encodeURIComponent(apiUrl)}`;
+      const res = await fetch(proxyUrl);
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      return await res.json();
+    } catch (err) {
+      console.warn(`Proxy ${proxy.name} failed:`, err.message);
+      lastError = err;
+    }
+  }
+
+  throw lastError || new Error('All proxies failed');
+}
+
 async function fetchCharacter() {
   const urlInput = document.getElementById("characterUrl").value.trim();
   const loading = document.getElementById("loading");
@@ -75,16 +102,12 @@ async function fetchCharacter() {
 
   const characterId = match[1];
   const apiUrl = `https://character-service.dndbeyond.com/character/v5/character/${characterId}`;
-  const proxyUrl = `${PROXY_URL}${encodeURIComponent(apiUrl)}`;
 
   loading.classList.remove("hidden");
   fetchBtn.disabled = true;
 
   try {
-    const res = await fetch(proxyUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const json = await res.json();
+    const json = await fetchWithProxy(apiUrl);
     if (!json.success || !json.data)
       throw new Error("ไม่พบข้อมูลตัวละคร หรือตัวละครไม่เป็น Public");
 
