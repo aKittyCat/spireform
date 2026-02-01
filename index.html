@@ -1,698 +1,857 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>The Spire Form</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="color-scheme" content="dark" />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              fantasy: {
-                bg: "#0B1220",
-                panel: "#111827",
-                border: "#283447",
-                gold: "#D4AF37",
-                accent: "#8B5CF6",
-              },
-            },
-          },
-        },
-      };
-    </script>
-    <style>
-      input[type="text"], input[type="number"], textarea {
-        font-size: 16px;
-      }
-      /* ซ่อนลูกศรบน Chrome, Edge, Safari */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      /* ซ่อนลูกศรบน Firefox */
-      input[type="number"] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-      }
-      .stat-input-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-      }
-      .stat-btn {
-        background-color: #1e293b;
-        color: #e2e8f0;
-        border: 1px solid #334155;
-        width: 28px;
-        height: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 6px;
-        user-select: none;
-        transition: all 0.2s;
-      }
-      .stat-btn:hover {
-        background-color: #334155;
-        border-color: #475569;
-      }
-      .stat-btn:active {
-        transform: scale(0.95);
-      }
-      .stat-btn:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-        transform: none;
-      }
-      .stat-value {
-        width: 40px;
-        text-align: center;
-        margin: 0;
-      }
 
-      /* ---------------- Modal Styles ---------------- */
-      /* Overlay */
-      .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.75); 
-          z-index: 1000; 
-          display: flex;
-          justify-content: center;
-          align-items: center;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Spire Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="dark" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
 
-      /* Modal Box */
-      .modal {
-          position: fixed; 
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 1001; 
-          width: 90%; 
-          max-width: 450px; 
-          box-shadow: 0 0 20px 5px rgba(40, 52, 71, 0.5); 
-          border: 1px solid #283447; 
-          border-radius: 8px;
-      }
+    body {
+      font-family: 'Sarabun', sans-serif;
+    }
 
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111827;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+
+    .glass-panel {
+      background: rgba(31, 41, 55, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(75, 85, 99, 0.4);
+    }
+
+    .gradient-text {
+      background: linear-gradient(to right, #c084fc, #818cf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      font-size: 16px;
+    }
+
+    /* ซ่อนลูกศรบน Chrome, Edge, Safari */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* ซ่อนลูกศรบน Firefox */
+    input[type="number"] {
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    .stat-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .stat-btn {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+      user-select: none;
+      transition: all 0.2s;
+    }
+
+    .stat-btn:hover {
+      background-color: #334155;
+      border-color: #475569;
+    }
+
+    .stat-btn:active {
+      transform: scale(0.95);
+    }
+
+    .stat-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .stat-value {
+      width: 40px;
+      text-align: center;
+      margin: 0;
+    }
+
+    /* ---------------- Modal Styles ---------------- */
+    /* Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Modal Box */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(75, 85, 99, 0.4);
+      border-radius: 16px;
+    }
+
+    .modal-content {
+      background: rgba(31, 41, 55, 0.95);
+      backdrop-filter: blur(10px);
+      color: #f3f4f6;
+      padding: 30px 24px;
+      border-radius: 16px;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    /* Close Button */
+    .close-button {
+      color: #a78bfa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+      color: #c4b5fd;
+      text-decoration: none;
+    }
+
+    /* Header and Text */
+    .modal-content h2 {
+      color: #c4b5fd;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .modal-content p {
+      margin: 5px 0;
+      line-height: 1.5;
+    }
+
+    .modal-content strong {
+      color: #a78bfa;
+      font-size: 1.1em;
+    }
+
+    .modal-tip {
+      font-size: 0.85em;
+      color: #e5e7eb;
+      margin-top: 15px;
+      padding: 10px 12px;
+      background-color: rgba(107, 114, 128, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid #a78bfa;
+    }
+
+    /* Button */
+    .modal-button {
+      background-color: #7c3aed;
+      color: white;
+      padding: 10px 24px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+    }
+
+    .modal-button:hover {
+      background-color: #6d28d9;
+      transform: translateY(-1px);
+    }
+
+    /* Utility Class */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive adjustment for very small screens (optional) */
+    @media (max-width: 350px) {
       .modal-content {
-          background-color: #111827;
-          color: #fefefe;
-          padding: 30px 20px;
-          border-radius: 8px;
-          text-align: center;
-          position: relative;
-          box-sizing: border-box; 
+        padding: 20px 15px;
       }
+    }
 
-      /* Close Button */
-      .close-button {
-          color: #D4AF37;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-          position: absolute;
-          top: 10px;
-          right: 15px;
-          cursor: pointer;
-          transition: color 0.2s;
-      }
+    /* ---------------- NEW RULE MODAL STYLES ---------------- */
+    /* New Rule Button Style (using theme colors) */
+    .btn-rule-modal {
+      background-color: #6366f1;
+      color: white;
+      padding: 10px 18px;
+      font-size: 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-      .close-button:hover,
-      .close-button:focus {
-          color: #fefefe;
-          text-decoration: none;
-      }
+    .btn-rule-modal:hover {
+      background-color: #4f46e5;
+      transform: translateY(-1px);
+    }
 
-      /* Header and Text */
-      .modal-content h2 {
-          color: #D4AF37;
-          margin-top: 0;
-          margin-bottom: 10px;
-      }
-      
-      .modal-content p {
-          margin: 5px 0;
-          line-height: 1.5;
-      }
+    /* Rule Modal Content Specific Styling (for readability of long list) */
+    .rule-modal-content h2 {
+      color: #c4b5fd;
+      margin-top: 0;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(75, 85, 99, 0.4);
+      text-align: left;
+      font-size: 1.5rem;
+    }
 
-      .modal-content strong {
-          color: #FFC107; 
-          font-size: 1.1em;
-      }
+    .rule-modal-content h3 {
+      color: #a78bfa;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-size: 1.1em;
+      font-weight: 600;
+    }
 
-      .modal-tip {
-          font-size: 0.85em;
-          color: #ddd;
-          margin-top: 15px;
-          padding: 10px;
-          background-color: #283447; 
-          border-radius: 4px;
-          border-left: 3px solid #D4AF37;
-      }
+    .rule-modal-content h3.banned {
+      color: #f87171;
+    }
 
-      /* Button */
-      .modal-button {
-          background-color: #8B5CF6; 
-          color: white;
-          padding: 10px 20px;
-          margin-top: 20px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 1em;
-          transition: background-color 0.3s;
-      }
+    .rule-modal-content ul {
+      padding-left: 20px;
+      list-style-type: disc;
+      margin: 5px 0;
+      text-align: left;
+    }
 
-      .modal-button:hover {
-          background-color: #7C3AED; 
-      }
+    .rule-modal-content li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+      font-size: 0.9em;
+      color: #d1d5db;
+    }
 
-      /* Utility Class */
-      .hidden {
-          display: none !important;
-      }
+    /* Color-coded sections for different content types */
+    .rule-section-official {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
 
-      /* Responsive adjustment for very small screens (optional) */
-      @media (max-width: 350px) {
-          .modal-content {
-              padding: 20px 15px;
-          }
-      }
+    .rule-section-official h3 {
+      color: #60a5fa !important;
+    }
 
-      /* ---------------- NEW RULE MODAL STYLES ---------------- */
-      /* New Rule Button Style (using theme colors) */
-      .btn-rule-modal {
-          /* Tailwind equivalent: bg-fantasy-accent hover:bg-violet-700 text-white */
-          background-color: #8B5CF6; 
-          color: white;
-          padding: 8px 16px;
-          font-size: 14px; 
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background-color 0.3s;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-          font-weight: 500;
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-      }
+    .rule-section-partnered {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
 
-      .btn-rule-modal:hover {
-          background-color: #7C3AED; /* Darker accent */
-      }
+    .rule-section-partnered h3 {
+      color: #34d399 !important;
+      margin-top: 0 !important;
+    }
 
-      /* Rule Modal Content Specific Styling (for readability of long list) */
-      .rule-modal-content h2 { 
-          color: #D4AF37; /* fantasy-gold */
-          margin-top: 0; 
-          margin-bottom: 10px; 
-          padding-bottom: 5px;
-          border-bottom: 1px solid #283447; /* fantasy-border */
-          text-align: left;
-          font-size: 1.5rem;
-      }
+    .rule-section-banned {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
 
-      .rule-modal-content h3 { 
-          color: #8B5CF6; /* fantasy-accent */
-          margin-top: 20px; 
-          margin-bottom: 8px; 
-          font-size: 1.1em; 
-          font-weight: 600;
-      }
+    .rule-section-banned h3 {
+      color: #f87171 !important;
+      margin-top: 0 !important;
+    }
 
-      .rule-modal-content h3.banned { 
-          color: #F87171; /* A light red for the dark theme */
-      } 
+    .rule-note {
+      font-size: 0.85em;
+      color: #f3f4f6;
+      background: rgba(107, 114, 128, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 2px;
+      border-left: 3px solid #a78bfa;
+    }
 
-      .rule-modal-content ul { 
-          padding-left: 20px; 
-          list-style-type: disc;
-          margin: 5px 0; 
-          text-align: left;
-      }
+    .rule-note-exception {
+      background: rgba(239, 68, 68, 0.15);
+      border-left: 3px solid #f87171;
+    }
 
-      .rule-modal-content li { 
-          margin-bottom: 6px; 
-          line-height: 1.5; 
-          font-size: 0.9em; 
-          color: #ccc; /* Lighter gray */
-      }
+    .rule-note-allowed {
+      background: rgba(16, 185, 129, 0.15);
+      border-left: 3px solid #34d399;
+    }
 
-      .rule-note {
-          font-size: 0.85em;
-          color: #fff;
-          background: #283447; /* fantasy-border as background */
-          padding: 2px 6px;
-          border-radius: 4px;
-          display: inline-block;
-          margin-top: 2px;
-          border-left: 3px solid #D4AF37; /* fantasy-gold line */
-      }
+    .rule-sub-note {
+      display: block;
+      margin-top: 4px;
+      padding: 6px 12px;
+      border-left: 3px solid #818cf8;
+      font-size: 0.85em;
+      background-color: rgba(107, 114, 128, 0.2);
+      border-radius: 6px;
+    }
+  </style>
+</head>
 
-      .rule-sub-note {
-          display: block;
-          margin-top: 4px;
-          padding: 5px 10px;
-          border-left: 3px solid #8B5CF6; /* fantasy-accent line */
-          font-size: 0.85em;
-          background-color: #283447;
-          border-radius: 4px;
-      }
-    </style>
-  </head>
-  <body class="bg-fantasy-bg text-gray-100 min-h-screen">
-    <div class="max-w-5xl mx-auto px-4 py-8">
-      <header class="mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">
-          🧙‍♂️ แบบฟอร์มสร้างตัวละคร D&D 5e 2014
-        </h1>
-        <p class="text-gray-300 mt-2">
-          กรอกข้อมูลแล้วกด
-          <span class="font-semibold text-fantasy-gold">Generate</span>
-          เพื่อสร้างข้อความตาม Template
-        </p>
-      </header>
+<body class="bg-gray-950 text-gray-200 font-sans min-h-screen selection:bg-purple-500 selection:text-white">
+  <div class="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 border-b border-gray-800 gap-4">
+      <div class="flex items-center gap-4">
+        <div class="p-3 bg-gray-800 rounded-xl shadow-lg border border-gray-700">
+          <span class="text-2xl">🧙‍♂️</span>
+        </div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            แบบฟอร์มสร้าง<span class="gradient-text">ตัวละคร</span>
+          </h1>
+          <p class="text-xs text-gray-500 mt-1">กรอกข้อมูลแล้วกด Generate เพื่อสร้างข้อความตาม Template</p>
+        </div>
+      </div>
+    </header>
 
-      <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg mb-6">
-        <div class="flex flex-col gap-3">
+    <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl mb-6 border-t-4 border-t-purple-500/50">
+      <h2 class="text-lg font-bold mb-4 text-white flex items-center gap-2">
+        <span class="bg-purple-500/20 text-purple-400 p-1.5 rounded-lg text-sm">🔗</span> ดึงข้อมูลจาก D&D Beyond
+      </h2>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input type="text" id="characterUrl" placeholder="https://www.dndbeyond.com/characters/150031282"
+          class="flex-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600" />
+        <button onclick="fetchCharacter()" id="fetchBtn"
+          class="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-purple-600/20 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2">
+          <span>📥</span> ดึงข้อมูล
+        </button>
+      </div>
+      <div id="loading" class="hidden flex items-center mt-3">
+        <div class="w-5 h-5 border-4 border-t-purple-400 border-gray-700 rounded-full animate-spin mr-2"></div>
+        <span class="text-sm text-gray-400">กำลังดึงข้อมูล...</span>
+      </div>
+      <p class="text-xs text-amber-400 mt-3 flex items-center gap-1">
+        ⚠️ หมายเหตุ: เมื่อดึงข้อมูลมาแล้วโปรดตรวจสอบด้วยตนเองอีกครั้งด้วย
+      </p>
+    </section>
+    <div id="successModalOverlay" class="modal-overlay hidden"></div>
+    <div id="successModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close-button" onclick="closeSuccessModal()">&times;</span>
+        <h2><strong>การดึงข้อมูลสำเร็จ ✅</strong></h2>
+        <p><strong>โปรดตรวจสอบด้วยตนเองอีกครั้งด้วย 🧐</strong></p>
+        <p class="modal-tip">⚠️ ข้อมูลบางอย่างอาจไม่สมบูรณ์</p>
+        <button onclick="closeSuccessModal()" class="modal-button">เข้าใจแล้ว</button>
+      </div>
+    </div>
+
+    <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl mb-6">
+      <h2 class="text-lg font-bold mb-4 text-white flex items-center gap-2">
+        <span class="bg-blue-500/20 text-blue-400 p-1.5 rounded-lg text-sm">📌</span> ข้อมูล / วิธีสร้างตัวละคร
+      </h2>
+      <ol class="list-decimal list-inside space-y-2 text-gray-200">
+        <li>
+          สามารถสมัครใช้งาน Character Tracking ได้ที่เว็บไซต์ของ
+          <a href="https://spiretk.vercel.app/" target="_blank"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>The Spire Tracking</b></a>
+          โดยเข้าใช้งานด้วย Discord
+        </li>
+        <li>
+          <b>เลเวลเริ่มต้น 3</b>, ใช้ <b>35 point buy</b> และ <b>Fixed HP</b> บนเว็บฟอร์มหรือ
+          <a href="https://chicken-dinner.com/5e/5e-point-buy.html#select&NA&8&8&8&8&8&8&0&0&35&18&8&19&15&12&9&7&5&4&3&2&1&0&1&2&4&6&9&4&4&4&4&4&4"
+            target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>ในเว็บนี้</b></a>
+          <span
+            class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold">ห้ามกดเลือกเผ่าในเว็บที่ใช้เลือก
+            stat</span>
+        </li>
+        <li>
+          เว็บสร้างตัวละคร: <a href="https://www.dndbeyond.com/" target="_blank"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>D&D Beyond</b></a> /
+          <a href="https://dicecloud.com/" target="_blank"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>Dicecloud</b></a> /
+          <b>G-sheet</b> (ถ้าเผ่ามีหลายเวอร์ชั่นจากต่างเล่มให้ระบุชื่อหนังสือ)
+        </li>
+        <li>ลงตัวละครใน<b>ช่องส่งตัวละคร</b> ตามรูปแบบปักหมุด</li>
+        <li>
+          ตรวจผ่านแล้วได้ ✅ ไปที่<b>ช่อง roles</b> เลือก <b>@Tier 1 (lvl 3-4)</b>
+        </li>
+        <li>
+          <span
+            class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold">ผู้เล่นสามารถสร้างตัวละครที่มี
+            Alignment เป็น Evil ได้ ตราบใดที่ไม่สร้างความเดือดร้อนให้กับผู้เล่นด้วยกัน</span>
+        </li>
+        <li>
+          <span
+            class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold">คำเตือน:
+            หนังสือทุกอย่างจากปี 2024
+            เป็นต้นไปไม่สามารถนำมาใช้ได้</span>
+        </li>
+      </ol>
+      <div class="mt-4">
+        <button id="openRuleModal" onclick="openRuleModal()" class="btn-rule-modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book-fill"
+            viewBox="0 0 16 16">
+            <path
+              d="M8 1.783C7.015.936 5.587.81 4.287.94c-.957.066-1.97.2-2.814.568A1.5 1.5 0 0 0 0 2.825v11.97c0 .265.176.425.29.569a.952.952 0 0 0 .7.255c.836-.08.975-.285 1.58-.453 1.883-.553 3.18-.738 5.42-.581 2.37.159 4.01.442 5.76.924a2.7 2.7 0 0 0 2.457-1.144c.15-.22.257-.454.257-.665V2.825c0-.62-.51-1.155-1.125-1.196-.94-.064-1.897.04-2.802.46-.943.434-2.02.73-3.084.73s-2.141-.296-3.084-.73h-.002z" />
+          </svg>
+          รายชื่อหนังสือที่อนุญาต
+        </button>
+      </div>
+    </section>
+
+    <form id="charForm" class="space-y-6">
+      <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl">
+        <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2">
+          <span class="bg-indigo-500/20 text-indigo-400 p-1.5 rounded-lg text-sm">🧾</span> ข้อมูลตัวละคร
+        </h3>
+
+        <div class="grid md:grid-cols-2 gap-4">
           <label class="block">
-            <span class="text-sm text-gray-300">วางลิงก์ D&D Beyond ที่นี่</span>
-            <input
-              type="text"
-              id="characterUrl"
-              placeholder="https://www.dndbeyond.com/characters/150031282"
-              class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent"
-            />
+            <span class="text-sm text-gray-300">ชื่อ</span>
+            <input type="text" id="name" required
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Arannis, Lyra" />
           </label>
-          <button
-            onclick="fetchCharacter()"
-            id="fetchBtn"
-            class="px-6 py-2 bg-fantasy-accent rounded-xl font-medium hover:opacity-90 transition"
-          >
-            ดึงข้อมูลจากลิงก์
+          <label class="block">
+            <span class="text-sm text-gray-300">คลาสหลัก (เริ่มที่เลเวล 3)</span>
+            <input type="text" id="primaryClass" required
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Fighter Level 3" />
+          </label>
+        </div>
+
+        <div class="mt-4">
+          <label class="block">
+            <span class="text-sm text-gray-300">คลาสรอง (ถ้ามี)</span>
+            <input type="text" id="multiclass"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="sub-class ของสายนั้ันๆ (ถ้าไม่มีเว้นว่าง)" />
+          </label>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <label class="block">
+            <span class="text-sm text-gray-300">เผ่า & ASI Bonus จากเผ่า <span style="color: #cc10cc;">*ตัวอย่าง:
+                Variant Human (STR +1, WIS +1)</span></span>
+            <textarea id="raceAsi" rows="3"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="ระบุเผ่าย่อย และถ้าเผ่ามีหลายเวอร์ชั่นให้บอกว่ามาจากเล่มไหน"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Custom Lineage Trait</span>
+            <textarea id="customLineage" rows="3"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Size Medium / Darkvision 60 ft."></textarea>
+          </label>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mt-4">
+          <label class="block md:col-span-1">
+            <span class="text-sm text-gray-300">Alignment</span>
+            <select id="alignment"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition">
+              <option value="-">-- เลือก Alignment --</option>
+              <option value="Lawful Good">Lawful Good</option>
+              <option value="Neutral Good">Neutral Good</option>
+              <option value="Chaotic Good">Chaotic Good</option>
+              <option value="Lawful Neutral">Lawful Neutral</option>
+              <option value="True Neutral">True Neutral</option>
+              <option value="Chaotic Neutral">Chaotic Neutral</option>
+              <option value="Lawful Evil">Lawful Evil</option>
+              <option value="Neutral Evil">Neutral Evil</option>
+              <option value="Chaotic Evil">Chaotic Evil</option>
+            </select>
+          </label>
+          <label class="block md:col-span-2">
+            <span class="text-sm text-gray-300">Background</span>
+            <input type="text" id="background"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Soldier, Sage" />
+          </label>
+        </div>
+      </section>
+
+      <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl">
+        <div class="flex flex-col-reverse md:flex-row md:items-center justify-between gap-4 mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="bg-orange-500/20 text-orange-400 p-1.5 rounded-lg text-sm">📊</span> ค่าสถานะ (ไม่รวม Bonus) —
+            35 Point Buy, Fixed HP
+          </h3>
+          <div class="flex items-center justify-end gap-2">
+            <span class="text-xs text-amber-400">*ใส่เฉพาะค่า Base</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mt-4">
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">STR</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('str')">−</button>
+              <input id="str" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('str')">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">DEX</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('dex')">−</button>
+              <input id="dex" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('dex')">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">CON</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('con')">−</button>
+              <input id="con" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('con')">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">INT</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('int')">−</button>
+              <input id="int" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('int')">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">WIS</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('wis')">−</button>
+              <input id="wis" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('wis')">+</button>
+            </div>
+          </div>
+          <div class="flex flex-col items-center">
+            <label class="text-sm text-gray-300">CHA</label>
+            <div class="stat-input-container">
+              <button type="button" class="stat-btn" onclick="decreaseStat('cha')">−</button>
+              <input id="cha" type="text" readonly value="8"
+                class="mt-1 stat-value bg-gray-800 border border-gray-700 text-center rounded-lg text-white" />
+              <button type="button" class="stat-btn" onclick="increaseStat('cha')">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-end gap-2 mt-4">
+          <span id="totalPoints" class="text-sm font-mono px-2 py-1 rounded">Total Points: 0/35</span>
+          <button type="button" id="resetStats"
+            class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded border border-gray-600"
+            title="รีเซ็ตค่าสถานะเป็น 8 ทั้งหมด">
+            Reset
           </button>
         </div>
-        <div id="loading" class="hidden flex items-center mt-3">
-          <div class="w-5 h-5 border-4 border-t-purple-400 border-gray-700 rounded-full animate-spin mr-2"></div>
-          <span class="text-sm text-gray-300">กำลังดึงข้อมูล...</span>
+      </section>
+
+      <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 mb-4">
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="bg-green-500/20 text-green-400 p-1.5 rounded-lg text-sm">🎒</span> ความถนัด & ตัวเลือกอื่นๆ
+          </h3>
+          <span
+            class="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-lg border border-emerald-500/30">*ระบุที่มา:
+            R=Race, C=Class, B=Background</span>
         </div>
-        <p class="text-xs text-red-400 mt-2">
-          หมายเหตุ: เมื่อดึงข้อมูลมาแล้วโปรดตรวจสอบด้วยตนเองอีกครั้งด้วย
+        <div class="grid md:grid-cols-2 gap-4">
+          <label class="block">
+            <span class="text-sm text-gray-300">ภาษา (ระบุที่มา R/C/B)</span>
+            <textarea id="languages" rows="2"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Common (R), Elvish (R), Draconic (B)"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Proficient Skills (ระบุที่มา R/C/B)</span>
+            <textarea id="skills" rows="2"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Perception (C), Athletics (B)"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Proficient Tools (ระบุที่มา R/C/B)</span>
+            <textarea id="tools" rows="2"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Thieves' Tools (C)"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Expertise (ถ้ามี)</span>
+            <textarea id="expertise" rows="2"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Stealth (C), Perception (B)"></textarea>
+          </label>
+          <label class="block md:col-span-2">
+            <span class="text-sm text-gray-300">Feat (ถ้ามี)</span>
+            <input type="text" id="feat"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น War Caster (R)" />
+          </label>
+          <label class="block md:col-span-2">
+            <span class="text-sm text-gray-300">ตัวเลือกอื่นๆจากคลาส (ถ้ามี)</span>
+            <textarea id="classOptions" rows="2"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Fighting Style: Defense (C)"></textarea>
+          </label>
+        </div>
+        <p class="text-xs text-amber-400 mt-3 flex items-center gap-1">
+          ⚠️ อย่าลืมระบุแหล่งที่มา
         </p>
       </section>
-      <div id="successModalOverlay" class="modal-overlay hidden"></div>
-      <div id="successModal" class="modal hidden">
-          <div class="modal-content">
-              <span class="close-button" onclick="closeSuccessModal()">&times;</span>
-              <h2><strong>การดึงข้อมูลสำเร็จ ✅</strong></h2>
-              <p><strong>โปรดตรวจสอบด้วยตนเองอีกครั้งด้วย 🧐</strong></p>
-              <p class="modal-tip">⚠️ ข้อมูลบางอย่างอาจไม่สมบูรณ์</p>
-              <button onclick="closeSuccessModal()" class="modal-button">เข้าใจแล้ว</button>
-          </div>
+
+      <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl">
+        <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2">
+          <span class="bg-violet-500/20 text-violet-400 p-1.5 rounded-lg text-sm">🪄</span> Cantrips & Spells (ถ้ามี)
+        </h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <label class="block">
+            <span class="text-sm text-gray-300">Cantrips</span>
+            <textarea id="cantrips" rows="3"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Fire Bolt, Guidance, Minor Illusion"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Spells ระดับ 1</span>
+            <textarea id="spells1" rows="3"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Shield, Healing Word, Magic Missile"></textarea>
+          </label>
+          <label class="block">
+            <span class="text-sm text-gray-300">Spells ระดับ 2</span>
+            <textarea id="spells2" rows="3"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="เช่น Misty Step, Aid, Scorching Ray"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl">
+        <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2">
+          <span class="bg-cyan-500/20 text-cyan-400 p-1.5 rounded-lg text-sm">🌐</span> แพลตฟอร์ม & ลิงก์
+        </h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <fieldset class="border border-gray-700 rounded-xl p-4 bg-gray-800/30">
+            <legend class="px-2 text-sm text-gray-300">แพลตฟอร์มที่ใช้สร้างตัวละคร</legend>
+            <div class="flex flex-col gap-2 mt-2">
+              <label class="inline-flex items-center gap-2 text-gray-200"><input type="radio" name="platform"
+                  value="D&D Beyond" class="accent-purple-500" checked /> D&D Beyond</label>
+              <label class="inline-flex items-center gap-2 text-gray-200"><input type="radio" name="platform"
+                  value="Dicecloud" class="accent-purple-500" /> Dicecloud</label>
+              <label class="inline-flex items-center gap-2 text-gray-200"><input type="radio" name="platform"
+                  value="G-sheet" class="accent-purple-500" /> G-sheet</label>
+            </div>
+          </fieldset>
+
+          <label class="block md:col-span-2">
+            <span class="text-sm text-gray-300">Tracking Sheet Link</span>
+            <input type="url" id="trackLink"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="วางลิงก์ไฟล์สำเนา Character Tracking Sheet หรือบอกว่าใช้ The Spire Tracking"
+              value="ใช้ The Spire Tracking" />
+          </label>
+
+          <label class="block md:col-span-2">
+            <span class="text-sm text-gray-300">Character Sheet Link</span>
+            <input type="url" id="sheetLink"
+              class="mt-1 w-full rounded-xl bg-gray-800 border border-gray-700 px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder-gray-600"
+              placeholder="วางลิงก์ชีทของตัวละคร (D&D Beyond / Dicecloud / G-sheet)" />
+          </label>
+        </div>
+      </section>
+
+      <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+        <button type="button" id="btnGenerate"
+          class="inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 font-semibold shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all">
+          ✨ Generate ข้อความสำหรับ Discord
+        </button>
+        <button type="button" id="btnCopy"
+          class="inline-flex items-center justify-center rounded-xl bg-gray-800 border border-gray-700 text-gray-300 px-4 py-2.5 font-medium hover:bg-gray-700 hover:text-white transition-all">
+          📋 คัดลอกข้อความ
+        </button>
+        <button type="reset"
+          class="inline-flex items-center justify-center rounded-xl bg-gray-800 border border-gray-700 text-gray-300 px-4 py-2.5 font-medium hover:bg-gray-700 hover:text-white transition-all">
+          🗑️ ล้างฟอร์ม
+        </button>
+        <span id="toast"
+          class="hidden text-sm text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/30">คัดลอกแล้ว
+          ✅</span>
+      </div>
+    </form>
+
+    <section class="glass-panel rounded-2xl p-5 md:p-6 shadow-xl mt-6">
+      <h3 class="text-lg font-bold mb-3 text-white flex items-center gap-2">
+        <span class="bg-emerald-500/20 text-emerald-400 p-1.5 rounded-lg text-sm">🧾</span> ข้อความตัวอย่างสำหรับ
+        Discord
+      </h3>
+      <span class="text-xs text-emerald-400">*สามารถแก้ไขในช่องนี้ได้</span>
+      <textarea id="output" rows="16"
+        class="w-full rounded-xl bg-gray-800 border border-gray-700 px-4 py-3 font-mono text-sm text-white mt-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+      <p class="text-xs text-gray-500 mt-2">
+        หมายเหตุ: ใช้ตัวหนา/บูลเล็ทให้พอดีเพื่อความอ่านง่ายใน Discord
+      </p>
+    </section>
+    <footer class="mt-12 text-center text-xs text-gray-600 border-t border-gray-800 pt-8">
+      <p>&copy; 🏰 The Spire Market - aKittyCat🐈. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div id="ruleModalOverlay" class="modal-overlay hidden"></div>
+  <div id="ruleModal" class="modal hidden">
+    <div class="modal-content rule-modal-content"
+      style="max-width: 800px; text-align: left; max-height: 90vh; overflow-y: auto;">
+      <span class="close-button" onclick="closeRuleModal()">&times;</span>
+
+      <h2>📖 รายชื่อหนังสือที่อนุญาต</h2>
+
+      <div class="rule-section-official">
+        <h3>📚 หนังสือจากออฟฟิเชี่ยล (2014)</h3>
+        <ul>
+          <li><strong>Wizards of the Coast (2014):</strong> คลาสหลัก คลาสรอง เผ่าหลัก เผ่าย่อย background feats
+            และเวทย์มนต์จากหนังสือ Wizards of the Coast for Dungeons and Dragons 5th Edition (2014)</li>
+        </ul>
       </div>
 
-      <section
-        class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg mb-6"
-      >
-        <div class="flex items-center gap-2 mb-3">
-          <h2 class="text-lg font-semibold">
-            📌 ข้อมูล / วิธีสร้างตัวละคร
-          </h2>
-        </div>
-        <ol class="list-decimal list-inside space-y-2 text-gray-200">
-          <li>
-            สามารถสมัครใช้งาน Character Tracking ได้ที่เว็บไซต์ของ
-            <a
-              href="https://spiretk.vercel.app/"
-              target="_blank"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              ><b>The Spire Tracking</b></a>
-            ในขั้นตอนการสมัครถึงจะให้ระบุอีเมลแต่ไม่จำเป็นต้องเป็นอีเมลจริง ขอแค่ลงท้ายด้วย @spire.com 
+      <div class="rule-section-partnered">
+        <h3>🤝 Partnered Content</h3>
+        <ul>
+          <li><strong>Grim Hollow: Lairs of Etharis:</strong> <span
+              class="rule-note rule-note-exception"><strong>ยกเว้น:</strong> feats</span></li>
+          <li><strong>Grim Hollow: Player Pack:</strong> <span
+              class="rule-note rule-note-exception"><strong>ยกเว้น:</strong> คลาส Blade Breaker</span></li>
+          <li><strong>Critical Role: Explorer's Guide to Wildemount:</strong> <span
+              class="rule-note rule-note-exception"><strong>ยกเว้น:</strong> Gunslinger subclass</span></li>
+          <li><strong>Critical Role: Call of the Netherdeep</strong></li>
+          <li><strong>Tal'Dorei Campaign Setting Reborn:</strong>
+            <span class="rule-note">Mystic Conflux สามารถเลือกได้เมื่อตัวละครถึง Tier 4 และมีเลเวลตั้งแต่ 17
+              ขึ้นไป</span>
           </li>
-          <li>
-            <b>เลเวลเริ่มต้น 3</b>, ใช้ <b>35 point buy</b> และ <b>Fixed HP</b> บนเว็บฟอร์มหรือ
-            <a
-              href="https://chicken-dinner.com/5e/5e-point-buy.html#select&NA&8&8&8&8&8&8&0&0&35&18&8&19&15&12&9&7&5&4&3&2&1&0&1&2&4&6&9&4&4&4&4&4&4"
-              target="_blank"
-              class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              ><b>ในเว็บนี้</b></a>
-            <span
-              class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold"
-              >ห้ามกดเลือกเผ่าในเว็บที่ใช้เลือก stat</span
-            >
+          <li><strong>Humblewood Campaign Setting</strong></li>
+          <li><strong>Humblewood Tales</strong></li>
+          <li><strong>Dungeons of Drakkenheim In Search of the Smuggler's Secrets</strong></li>
+          <li><strong>MCDM: Flee, Mortals!, Where Evil Lives</strong></li>
+          <li><strong>Frozen Sick</strong>, <strong>Lightning Keep</strong>, <strong>Tome of Beasts 1</strong></li>
+          <li><strong>The Griffon's Saddlebag: Book Two</strong></li>
+          <li><strong>Obojima: Tales from the Tall Grass:</strong>
+            <span class="rule-note rule-note-allowed"><strong>สิ่งที่สามารถใช้ได้:</strong> เผ่า, คลาสรอง,
+              เวทย์มนต์, Background, Feat (ยกเว้น Feat สำหรับแคมเปญ), และไอเทมระดับ Mundane (ยกเว้นไอเทมประเภท
+              Ingredient)</span>
           </li>
-          <li>
-              เว็บสร้างตัวละคร: <a href="https://www.dndbeyond.com/" target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>D&D Beyond</b></a> / 
-              <a href="https://dicecloud.com/" target="_blank" class="font-medium text-blue-600 dark:text-blue-500 hover:underline"><b>Dicecloud</b></a> /
-              <b>G-sheet</b> (ถ้าเผ่ามีหลายเวอร์ชั่นจากต่างเล่มให้ระบุชื่อหนังสือ)
+          <li><strong>Steinhardt's Guide to The Eldritch Hunt:</strong>
+            <span class="rule-note rule-note-exception"><strong>ยกเว้น:</strong> คลาสรอง Living Nightmare,
+              Backgrounds, ไอเทม, cannoneer และ optional replacement feats</span>
+            <div class="rule-sub-note">
+              <strong>*สำหรับ Jaeger:</strong> ข้อจำกัดสำหรับมัลติคลาส: Ability Score ขั้นต่ำ Strength 13 หรือ Dexterity
+              13, Multiclassing Proficiencies: Light armor, medium armor, simple weapons, martial weapons, firearm
+            </div>
           </li>
-          <li>ลงตัวละครใน<b>ช่องส่งตัวละคร</b> ตามรูปแบบปักหมุด</li>
-          <li>
-            ตรวจผ่านแล้วได้ ✅ ไปที่<b>ช่อง roles</b> เลือก <b>@Tier 1 (lvl 3-4)</b>
-          </li>
-          <li>
-            <span
-              class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold"
-              >ผู้เล่นสามารถสร้างตัวละครที่มี Alignment เป็น Evil ได้ ตราบใดที่ไม่สร้างความเดือดร้อนให้กับผู้เล่นด้วยกัน</span
-            >
-          </li>
-          <li>
-            <span
-              class="ml-1 inline-block rounded-md bg-red-600/20 px-2 py-0.5 text-red-300 text-sm font-semibold"
-              >คำเตือน: หนังสือทุกอย่างจากปี 2024
-              เป็นต้นไปไม่สามารถนำมาใช้ได้</span
-            >
-          </li>
-        </ol>
-        <div class="mt-4">
-          <button id="openRuleModal" onclick="openRuleModal()" class="btn-rule-modal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book-fill" viewBox="0 0 16 16">
-              <path d="M8 1.783C7.015.936 5.587.81 4.287.94c-.957.066-1.97.2-2.814.568A1.5 1.5 0 0 0 0 2.825v11.97c0 .265.176.425.29.569a.952.952 0 0 0 .7.255c.836-.08.975-.285 1.58-.453 1.883-.553 3.18-.738 5.42-.581 2.37.159 4.01.442 5.76.924a2.7 2.7 0 0 0 2.457-1.144c.15-.22.257-.454.257-.665V2.825c0-.62-.51-1.155-1.125-1.196-.94-.064-1.897.04-2.802.46-.943.434-2.02.73-3.084.73s-2.141-.296-3.084-.73h-.002z"/>
-            </svg>
-            รายชื่อหนังสือที่อนุญาต
-          </button>
-        </div>
-      </section>
+        </ul>
+      </div>
 
-      <form id="charForm" class="space-y-6">
-        <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
-          <h3 class="text-lg font-semibold mb-4">🧾 ข้อมูลตัวละคร</h3>
-          
-          <div class="grid md:grid-cols-2 gap-4">
-            <label class="block">
-              <span class="text-sm text-gray-300">ชื่อ</span>
-              <input type="text" id="name" required class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Arannis, Lyra" />
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">คลาสหลัก (เริ่มที่เลเวล 3)</span>
-              <input type="text" id="primaryClass" required class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Fighter Level 3" />
-            </label>
-          </div>
+      <div class="rule-section-banned">
+        <h3>🚫 Banned list: (ไม่อนุญาต)</h3>
+        <ul>
+          <li><strong>Kobold Press:</strong> Book of Ebon Tides, Tales from the Shadows</li>
+          <li><strong>The Illrigger Revised</strong></li>
+          <li><strong>The Lord of the Rings Roleplaying</strong></li>
+          <li><strong>Grim Hollow: Player Guide</strong></li>
+        </ul>
+      </div>
 
-          <div class="mt-4">
-            <label class="block">
-              <span class="text-sm text-gray-300">คลาสรอง (ถ้ามี)</span>
-              <input type="text" id="multiclass" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="sub-class ของสายนั้ันๆ (ถ้าไม่มีเว้นว่าง)" />
-            </label>
-          </div>
-
-          <div class="grid md:grid-cols-2 gap-4 mt-4">
-            <label class="block">
-              <span class="text-sm text-gray-300">เผ่า & ASI Bonus จากเผ่า <span style="color: #cc10cc;">*ตัวอย่าง: Variant Human (STR +1, WIS +1)</span></span>
-              <textarea id="raceAsi" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="ระบุเผ่าย่อย และถ้าเผ่ามีหลายเวอร์ชั่นให้บอกว่ามาจากเล่มไหน"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Custom Lineage Trait</span>
-              <textarea id="customLineage" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Size Medium / Darkvision 60 ft."></textarea>
-            </label>
-          </div>
-
-          <div class="grid md:grid-cols-3 gap-4 mt-4">
-            <label class="block md:col-span-1">
-              <span class="text-sm text-gray-300">Alignment</span>
-              <select id="alignment" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent text-gray-100">
-                <option value="-">-- เลือก Alignment --</option>
-                <option value="Lawful Good">Lawful Good</option>
-                <option value="Neutral Good">Neutral Good</option>
-                <option value="Chaotic Good">Chaotic Good</option>
-                <option value="Lawful Neutral">Lawful Neutral</option>
-                <option value="True Neutral">True Neutral</option>
-                <option value="Chaotic Neutral">Chaotic Neutral</option>
-                <option value="Lawful Evil">Lawful Evil</option>
-                <option value="Neutral Evil">Neutral Evil</option>
-                <option value="Chaotic Evil">Chaotic Evil</option>
-              </select>
-            </label>
-            <label class="block md:col-span-2">
-              <span class="text-sm text-gray-300">Background</span>
-              <input type="text" id="background" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Soldier, Sage"/>
-            </label>
-          </div>
-        </section>
-
-        <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
-          <div class="flex flex-col-reverse md:flex-row md:items-center justify-between gap-4">
-            <h3 class="text-lg font-semibold">📊 ค่าสถานะ (ไม่รวม Bonus) — 35 Point Buy, Fixed HP</h3>
-            <div class="flex items-center justify-end gap-2">
-              <span class="text-xs text-red-400">*ใส่เฉพาะค่า Base</span>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 mt-4">
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">STR</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('str')">−</button>
-                <input id="str" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('str')">+</button>
-              </div>
-            </div>
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">DEX</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('dex')">−</button>
-                <input id="dex" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('dex')">+</button>
-              </div>
-            </div>
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">CON</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('con')">−</button>
-                <input id="con" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('con')">+</button>
-              </div>
-            </div>
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">INT</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('int')">−</button>
-                <input id="int" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('int')">+</button>
-              </div>
-            </div>
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">WIS</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('wis')">−</button>
-                <input id="wis" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('wis')">+</button>
-              </div>
-            </div>
-            <div class="flex flex-col items-center">
-              <label class="text-sm text-gray-300">CHA</label>
-              <div class="stat-input-container">
-                <button type="button" class="stat-btn" onclick="decreaseStat('cha')">−</button>
-                <input id="cha" type="text" readonly value="8" class="mt-1 stat-value bg-[#0f172a] border border-fantasy-border text-center" />
-                <button type="button" class="stat-btn" onclick="increaseStat('cha')">+</button>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center justify-end gap-2 mt-4">
-            <span id="totalPoints" class="text-sm font-mono px-2 py-1 rounded">Total Points: 0/35</span>
-            <button
-              type="button"
-              id="resetStats"
-              class="text-xs px-2 py-1 bg-gray-700 hover:bg-gray-600 rounded border border-gray-600"
-              title="รีเซ็ตค่าสถานะเป็น 8 ทั้งหมด"
-            >
-              Reset
-            </button>
-          </div>
-        </section>
-
-        <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
-          <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold mb-4">🎒 ความถนัด & ตัวเลือกอื่นๆ</h3>
-            <span class="text-xs text-green-400"
-              >*ระบุที่มา:R ย่อมาจาก Race, C ย่อมาจาก Class และ B ย่อมาจาก Background
-            </span>
-          </div>
-          <div class="grid md:grid-cols-2 gap-4">
-            <label class="block">
-              <span class="text-sm text-gray-300">ภาษา (ระบุที่มา R/C/B)</span>
-              <textarea id="languages" rows="2" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Common (R), Elvish (R), Draconic (B)"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Proficient Skills (ระบุที่มา R/C/B)</span>
-              <textarea id="skills" rows="2" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Perception (C), Athletics (B)"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Proficient Tools (ระบุที่มา R/C/B)</span>
-              <textarea id="tools" rows="2" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Thieves' Tools (C)"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Expertise (ถ้ามี)</span>
-              <textarea id="expertise" rows="2" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Stealth (C), Perception (B)"></textarea>
-            </label>
-            <label class="block md:col-span-2">
-              <span class="text-sm text-gray-300">Feat (ถ้ามี)</span>
-              <input type="text" id="feat" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น War Caster (R)" />
-            </label>
-            <label class="block md:col-span-2">
-              <span class="text-sm text-gray-300">ตัวเลือกอื่นๆจากคลาส (ถ้ามี)</span>
-              <textarea id="classOptions" rows="2" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Fighting Style: Defense (C)"></textarea>
-            </label>
-          </div>
-          <p class="text-xs text-red-400 mt-2">
-            !อย่าลืมระบุแหล่งที่มา
-          </p>
-        </section>
-
-        <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
-          <h3 class="text-lg font-semibold mb-4">🪄 Cantrips & Spells (ถ้ามี)</h3>
-          <div class="grid md:grid-cols-3 gap-4">
-            <label class="block">
-              <span class="text-sm text-gray-300">Cantrips</span>
-              <textarea id="cantrips" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Fire Bolt, Guidance, Minor Illusion"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Spells ระดับ 1</span>
-              <textarea id="spells1" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Shield, Healing Word, Magic Missile"></textarea>
-            </label>
-            <label class="block">
-              <span class="text-sm text-gray-300">Spells ระดับ 2</span>
-              <textarea id="spells2" rows="3" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="เช่น Misty Step, Aid, Scorching Ray"></textarea>
-            </label>
-          </div>
-        </section>
-
-        <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg">
-          <h3 class="text-lg font-semibold mb-4">🌐 แพลตฟอร์ม & ลิงก์</h3>
-          <div class="grid md:grid-cols-2 gap-4">
-            <fieldset class="border border-fantasy-border rounded-xl p-3">
-              <legend class="px-2 text-sm text-gray-300">แพลตฟอร์มที่ใช้สร้างตัวละคร</legend>
-              <div class="flex flex-col gap-2 mt-2">
-                <label class="inline-flex items-center gap-2"><input type="radio" name="platform" value="D&D Beyond" class="accent-fantasy-accent" checked /> D&D Beyond</label>
-                <label class="inline-flex items-center gap-2"><input type="radio" name="platform" value="Dicecloud" class="accent-fantasy-accent" /> Dicecloud</label>
-                <label class="inline-flex items-center gap-2"><input type="radio" name="platform" value="G-sheet" class="accent-fantasy-accent" /> G-sheet</label>
-              </div>
-            </fieldset>
-
-            <label class="block md:col-span-2">
-              <span class="text-sm text-gray-300">Tracking Sheet Link</span>
-              <input type="url" id="trackLink" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="วางลิงก์ไฟล์สำเนา Character Tracking Sheet หรือบอกว่าใช้ The Spire Tracking"  value="ใช้ The Spire Tracking"/>
-            </label>
-
-            <label class="block md:col-span-2">
-              <span class="text-sm text-gray-300">Character Sheet Link</span>
-              <input type="url" id="sheetLink" class="mt-1 w-full rounded-xl border border-fantasy-border bg-[#0f172a] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-fantasy-accent" placeholder="วางลิงก์ชีทของตัวละคร (D&D Beyond / Dicecloud / G-sheet)"/>
-            </label>
-          </div>
-        </section>
-
-        <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
-          <button type="button" id="btnGenerate" class="inline-flex items-center justify-center rounded-xl bg-fantasy-accent px-4 py-2 font-semibold hover:opacity-90 active:scale-[.99] transition">Generate ข้อความสำหรับ Discord</button>
-          <button type="button" id="btnCopy" class="inline-flex items-center justify-center rounded-xl border border-fantasy-border px-4 py-2 font-medium hover:bg-white/5 transition">คัดลอกข้อความ</button>
-          <button type="reset" class="inline-flex items-center justify-center rounded-xl border border-fantasy-border px-4 py-2 font-medium hover:bg-white/5 transition">ล้างฟอร์ม</button>
-          <span id="toast" class="hidden text-sm text-emerald-300">คัดลอกแล้ว ✅</span>
-        </div>
-      </form>
-
-      <section class="rounded-2xl border border-fantasy-border bg-fantasy-panel p-5 md:p-6 shadow-lg mt-6">
-        <h3 class="text-lg font-semibold mb-3">🧾 ข้อความตัวอย่างสำหรับ Discord</h3>
-        <span class="text-xs text-green-400">*สามารถแก้ไขในช่องนี้ได้</span>
-        <textarea id="output" rows="16" class="w-full rounded-xl border border-fantasy-border bg-[#0b1325] px-3 py-3 font-mono text-sm"></textarea>
-        <p class="text-xs text-gray-400 mt-2">
-          หมายเหตุ: ใช้ตัวหนา/บูลเล็ทให้พอดีเพื่อความอ่านง่ายใน Discord
-        </p>
-      </section>
-      <footer class="text-center text-gray-500 text-xs mt-8">
-        &copy;🏰 The Spire Market - aKittyCat🐈. All rights reserved.
-      </footer>
+      <button onclick="closeRuleModal()" class="modal-button mt-4 w-full">ปิด</button>
     </div>
+  </div>
 
-    <div id="ruleModalOverlay" class="modal-overlay hidden"></div>
-    <div id="ruleModal" class="modal hidden">
-        <div class="modal-content rule-modal-content" style="max-width: 800px; text-align: left; max-height: 90vh; overflow-y: auto;">
-            <span class="close-button" onclick="closeRuleModal()">&times;</span>
-            
-            <h2>📖 รายชื่อหนังสือที่อนุญาต</h2>
+  <script src="./scripts.js"></script>
+  <script>
+    function closeSuccessModal() {
+      document.getElementById("successModal").classList.add("hidden");
+      document.getElementById("successModalOverlay").classList.add("hidden");
+    }
 
-            <h3>📚 หนังสือจากออฟฟิเชี่ยล (2014)</h3>
-            <ul>
-                <li><strong>Wizards of the Coast (2014):</strong> คลาสหลัก คลาสรอง เผ่าหลัก เผ่าย่อย background feats และเวทย์มนต์จากหนังสือ Wizards of the Coast for Dungeons and Dragons 5th Edition (2014)</li>
-            </ul>
+    // New functions for the Rule Modal
+    function openRuleModal() {
+      document.getElementById("ruleModal").classList.remove("hidden");
+      document.getElementById("ruleModalOverlay").classList.remove("hidden");
+    }
 
-            <h3>🤝 Partnered Content</h3>
-            <ul>
-                <li><strong>Grim Hollow: Lairs of Etharis:</strong> <span class="rule-note"><strong style="color: #F87171;">ยกเว้น:</strong> feats</span></li>
-                <li><strong>Grim Hollow: Player Pack:</strong> <span class="rule-note"><strong style="color: #F87171;">ยกเว้น:</strong> คลาส Blade Breaker</span></li>
-                <li><strong>Critical Role: Explorer's Guide to Wildemount:</strong> <span class="rule-note"><strong style="color: #F87171;">ยกเว้น:</strong> Gunslinger subclass</span></li>
-                <li><strong>Critical Role: Call of the Netherdeep</strong></li>
-                <li><strong>Tal’Dorei Campaign Setting Reborn:</strong> 
-                    <span class="rule-note">Mystic Conflux สามารถเลือกได้เมื่อตัวละครถึง Tier 4 และมีเลเวลตั้งแต่ 17 ขึ้นไป</span>
-                </li>
-                <li><strong>Humblewood Campaign Setting</strong></li>
-                <li><strong>Humblewood Tales</strong></li>
-                <li><strong>Dungeons of Drakkenheim In Search of the Smuggler's Secrets</strong></li>
-                <li><strong>MCDM: Flee, Mortals!, Where Evil Lives</strong> </li>
-                <li><strong>Frozen Sick</strong>, <strong>Lightning Keep</strong>, <strong>Tome of Beasts 1</strong></li>
-                <li><strong>The Griffon’s Saddlebag: Book Two</strong></li>
-                <li><strong>Obojima: Tales from the Tall Grass:</strong> 
-                    <span class="rule-note"><strong style="color: lawngreen;">สิ่งที่สามารถใช้ได้:</strong> เผ่า, คลาสรอง, เวทย์มนต์, Background, Feat (ยกเว้น Feat สำหรับแคมเปญ), และไอเทมระดับ Mundane (ยกเว้นไอเทมประเภท Ingredient)</span>
-                </li>
-                <li><strong>Steinhardt's Guide to The Eldritch Hunt:</strong>
-                    <span class="rule-note"><strong style="color: #F87171;">ยกเว้น:</strong> คลาสรอง Living Nightmare, Backgrounds, ไอเทม, cannoneer และ optional replacement feats</span>
-                    <div class="rule-sub-note">
-                        <strong>*สำหรับ Jaeger:</strong> ข้อจำกัดสำหรับมัลติคลาส: Ability Score ขั้นต่ำ Strength 13 หรือ Dexterity 13, Multiclassing Proficiencies: Light armor, medium armor, simple weapons, martial weapons, firearm
-                    </div>
-                </li>
-            </ul>
+    function closeRuleModal() {
+      document.getElementById("ruleModal").classList.add("hidden");
+      document.getElementById("ruleModalOverlay").classList.add("hidden");
+    }
 
-            <h3 class="banned">🚫 Banned list: (ไม่อนุญาต)</h3>
-            <ul>
-                <li><strong>Kobold Press:</strong> Book of Ebon Tides, Tales from the Shadows</li>
-                <li><strong>The Illrigger Revised</strong></li>
-                <li><strong>The Lord of the Rings Roleplaying</strong></li>
-                <li><strong>Grim Hollow: Player Guide</strong></li>
-            </ul>
-
-            <button onclick="closeRuleModal()" class="modal-button mt-4 w-full">ปิด</button>
-        </div>
-    </div>
-
-    <script src="./scripts.js"></script>
-    <script>
-      function closeSuccessModal() {
-          document.getElementById("successModal").classList.add("hidden");
-          document.getElementById("successModalOverlay").classList.add("hidden");
-      }
-      
-      // New functions for the Rule Modal
-      function openRuleModal() {
-          document.getElementById("ruleModal").classList.remove("hidden");
-          document.getElementById("ruleModalOverlay").classList.remove("hidden");
-      }
-
-      function closeRuleModal() {
-          document.getElementById("ruleModal").classList.add("hidden");
-          document.getElementById("ruleModalOverlay").classList.add("hidden");
-      }
-      
-      // Optional: Add event listener for clicking outside the modal
-      document.addEventListener('DOMContentLoaded', (event) => {
-          const ruleModalOverlay = document.getElementById('ruleModalOverlay');
-          if (ruleModalOverlay) {
-              ruleModalOverlay.addEventListener('click', (e) => {
-                if(e.target === ruleModalOverlay) {
-                  closeRuleModal();
-                }
-              });
+    // Optional: Add event listener for clicking outside the modal
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const ruleModalOverlay = document.getElementById('ruleModalOverlay');
+      if (ruleModalOverlay) {
+        ruleModalOverlay.addEventListener('click', (e) => {
+          if (e.target === ruleModalOverlay) {
+            closeRuleModal();
           }
-      });
-    </script>
-  </body>
+        });
+      }
+    });
+  </script>
+</body>
 </html>
