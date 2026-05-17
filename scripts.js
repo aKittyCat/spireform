@@ -574,7 +574,7 @@ async function fetchCharacter() {
     document.getElementById("customLineage").value = customLineage.join("\n");
     const alignmentMap = {
       1: "Lawful Good", 2: "Neutral Good", 3: "Chaotic Good",
-      4: "Lawful Neutral", 5: "Neutral", 6: "Chaotic Neutral",
+      4: "Lawful Neutral", 5: "True Neutral", 6: "Chaotic Neutral",
       7: "Lawful Evil", 8: "Neutral Evil", 9: "Chaotic Evil"
     };
     document.getElementById("alignment").value = alignmentMap[c.alignmentId] || "-";
@@ -687,6 +687,7 @@ document.getElementById("btnCopy").addEventListener("click", async () => {
 // Persist
 const persistIds = [
   "name",
+  "alignment",
   "primaryClass",
   "multiclass",
   "raceAsi",
